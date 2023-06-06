@@ -11,8 +11,6 @@
            le = average_life_expectancy_years) %>% 
     mutate(group = 'US')
   
-  json_us = df_us %>% jsonlite::write_json("clean/le_us.json")  
-  
 }
 
 
