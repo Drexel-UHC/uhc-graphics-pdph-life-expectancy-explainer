@@ -33,19 +33,31 @@
       .domain([0, Math.max(...data.map(d => d.le))])
       .range([height - margin.bottom, margin.top]);
 
-    // Create line generator
-    const lineGenerator = line()
+    // Append line for US data points
+    const lineGeneratorPhilly = line()
       .x(d => x(d.year))
       .y(d => y(d.le))
       .curve(curveMonotoneX);
 
-    // Append the line
     svg.append("path")
-      .datum(data)
+      .datum(data.filter(d => d.group === "Philadelphia"))
       .attr("fill", "none")
-      .attr("stroke", "purple")
+      .attr("stroke", "DarkRed")
       .attr("stroke-width", 3)
-      .attr("d", lineGenerator);
+      .attr("d", lineGeneratorPhilly);
+
+    // Append line for US data points
+    const lineGeneratorUS = line()
+      .x(d => x(d.year))
+      .y(d => y(d.le))
+      .curve(curveMonotoneX);
+
+    svg.append("path")
+      .datum(data.filter(d => d.group === "US"))
+      .attr("fill", "none")
+      .attr("stroke", "FireBrick")
+      .attr("stroke-width", 3)
+      .attr("d", lineGeneratorUS);
 
     // Append data points with tooltips
     svg.selectAll("circle")
@@ -55,7 +67,7 @@
       .attr("cx", d => x(d.year))
       .attr("cy", d => y(d.le))
       .attr("r", 5)
-      .attr("fill", "purple")
+      .attr("fill", "salmon")
       .append("title") // Add tooltip
       .text(d => `Year: ${d.year.getFullYear()}, LE: ${d.le}, place: ${d.group}`);
 
