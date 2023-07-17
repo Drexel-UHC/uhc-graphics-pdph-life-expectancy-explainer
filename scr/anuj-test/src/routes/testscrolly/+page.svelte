@@ -1,7 +1,7 @@
 <script>
-  import Philly from "./Philly.svelte";
+  // import Philly from "./Philly.svelte";
 import Philly1 from "./Philly.svelte";
-  import Us1 from "./Us.svelte";
+  // import Us1 from "./Us.svelte";
 </script>
 
 <section>
@@ -12,6 +12,6 @@ import Philly1 from "./Philly.svelte";
 
 <section>
   <div>
-    <Us1 />
+    <!-- <Us1 /> -->
   </div>
 </section>
