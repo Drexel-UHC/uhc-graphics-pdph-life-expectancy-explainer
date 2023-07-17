@@ -82,6 +82,15 @@
       .data(data)
       .enter()
       .append("circle")
+      .attr("class", d => {
+        if (d.group === "Philadelphia") {
+          return "philadelphia-circle";
+        } else if (d.group === "US") {
+          return "us-circle";
+        } else {
+          return "";
+        }
+      })
       .attr("cx", d => x(d.year))
       .attr("cy", d => y(d.le))
       .attr("r", 5)
@@ -107,9 +116,15 @@
     currentGroupIndexTweened.subscribe(value => {
       currentGroupIndex = Math.round(value);
       svg.select(".philadelphia-line")
-        .attr("opacity", (currentGroupIndex === 0 ? 1 : 0));
+        .attr("opacity", currentGroupIndex === 0 ? 1 : 0);
       svg.select(".us-line")
-        .attr("opacity", (currentGroupIndex === 1 ? 1 : 0));
+        .attr("opacity", currentGroupIndex === 1 ? 1 : 0);
+
+      svg.selectAll(".philadelphia-circle")
+        .attr("opacity", currentGroupIndex === 0 ? 1 : 0);
+
+      svg.selectAll(".us-circle")
+        .attr("opacity", currentGroupIndex === 1 ? 1 : 0);
     });
 
     animateLineTweened.subscribe(value => {
