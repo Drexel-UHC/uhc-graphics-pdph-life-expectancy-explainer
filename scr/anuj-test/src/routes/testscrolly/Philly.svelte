@@ -13,6 +13,8 @@
 
   let data = [{"year":1981,"le":72.1,"group":"Philadelphia"},{"year":1982,"le":72.5,"group":"Philadelphia"},{"year":1983,"le":72.6,"group":"Philadelphia"},{"year":1984,"le":72.7,"group":"Philadelphia"},{"year":1985,"le":72.7,"group":"Philadelphia"},{"year":1986,"le":72.7,"group":"Philadelphia"},{"year":1987,"le":72.9,"group":"Philadelphia"},{"year":1988,"le":72.9,"group":"Philadelphia"},{"year":1989,"le":73.1,"group":"Philadelphia"},{"year":1990,"le":73.4,"group":"Philadelphia"},{"year":1991,"le":73.5,"group":"Philadelphia"},{"year":1992,"le":73.8,"group":"Philadelphia"},{"year":1993,"le":73.5,"group":"Philadelphia"},{"year":1994,"le":73.7,"group":"Philadelphia"},{"year":1995,"le":73.8,"group":"Philadelphia"},{"year":1996,"le":74.1,"group":"Philadelphia"},{"year":1997,"le":74.5,"group":"Philadelphia"},{"year":1998,"le":74.7,"group":"Philadelphia"},{"year":1999,"le":74.7,"group":"Philadelphia"},{"year":2000,"le":74.7,"group":"Philadelphia"},{"year":2001,"le":74.7,"group":"Philadelphia"},{"year":2002,"le":74.7,"group":"Philadelphia"},{"year":2003,"le":74.7,"group":"Philadelphia"},{"year":2004,"le":74.7,"group":"Philadelphia"},{"year":2005,"le":74.7,"group":"Philadelphia"},{"year":2006,"le":74.7,"group":"Philadelphia"},{"year":2007,"le":74.7,"group":"Philadelphia"},{"year":2008,"le":74.7,"group":"Philadelphia"},{"year":2009,"le":74.7,"group":"Philadelphia"},{"year":2010,"le":74.6,"group":"Philadelphia"},{"year":2011,"le":74.5,"group":"Philadelphia"},{"year":2012,"le":74.4,"group":"Philadelphia"},{"year":2013,"le":74.3,"group":"Philadelphia"},{"year":2014,"le":74.2,"group":"Philadelphia"},{"year":2015,"le":74.1,"group":"Philadelphia"},{"year":2016,"le":74,"group":"Philadelphia"},{"year":2017,"le":73.9,"group":"Philadelphia"},{"year":2018,"le":73.8,"group":"Philadelphia"},{"year":1981,"le":74.1,"group":"US"},{"year":1982,"le":74.5,"group":"US"},{"year":1983,"le":74.6,"group":"US"},{"year":1984,"le":74.7,"group":"US"},{"year":1985,"le":74.7,"group":"US"},{"year":1986,"le":74.7,"group":"US"},{"year":1987,"le":74.9,"group":"US"},{"year":1988,"le":74.9,"group":"US"},{"year":1989,"le":75.1,"group":"US"},{"year":1990,"le":75.4,"group":"US"},{"year":1991,"le":75.5,"group":"US"},{"year":1992,"le":75.8,"group":"US"},{"year":1993,"le":75.5,"group":"US"},{"year":1994,"le":75.7,"group":"US"},{"year":1995,"le":75.8,"group":"US"},{"year":1996,"le":76.1,"group":"US"},{"year":1997,"le":76.5,"group":"US"},{"year":1998,"le":76.7,"group":"US"},{"year":1999,"le":76.7,"group":"US"},{"year":2000,"le":76.8,"group":"US"},{"year":2001,"le":77,"group":"US"},{"year":2002,"le":77,"group":"US"},{"year":2003,"le":77.6,"group":"US"},{"year":2004,"le":77.5,"group":"US"},{"year":2005,"le":77.6,"group":"US"},{"year":2006,"le":77.8,"group":"US"},{"year":2007,"le":78.1,"group":"US"},{"year":2008,"le":78.2,"group":"US"},{"year":2009,"le":78.5,"group":"US"},{"year":2010,"le":78.7,"group":"US"},{"year":2011,"le":78.7,"group":"US"},{"year":2012,"le":78.8,"group":"US"},{"year":2013,"le":78.8,"group":"US"},{"year":2014,"le":78.9,"group":"US"},{"year":2015,"le":78.7,"group":"US"},{"year":2016,"le":78.7,"group":"US"},{"year":2017,"le":78.6,"group":"US"},{"year":2018,"le":78.7,"group":"US"}];
 
+  data = data.filter(d => d.year >= 1981 && d.year <= 2000);
+
   let currentGroupIndex = 0;
   const currentGroupIndexTweened = tweened(0, { duration: 500, easing: cubicOut });
 
@@ -94,7 +96,7 @@
       .attr("cx", d => x(d.year))
       .attr("cy", d => y(d.le))
       .attr("r", 5)
-      .attr("fill", "salmon")
+      .attr("fill", d => (d.group === "Philadelphia" ? "salmon" : "steelblue"))
       .append("title") // Add tooltip
       .text(d => `Year: ${d.year.getFullYear()}, LE: ${d.le}, place: ${d.group}`);
 
@@ -148,13 +150,20 @@
     });
   });
 
+  let showPhiladelphiaText = true;
+  let showUSText = false;
+
   function handleScroll() {
     if (window.pageYOffset > 0) {
       currentGroupIndexTweened.set(1);
       animateLineTweened.set(1);
+      showPhiladelphiaText = false;
+      showUSText = true;
     } else {
       currentGroupIndexTweened.set(0);
       animateLineTweened.set(0);
+      showPhiladelphiaText = true;
+      showUSText = false;
     }
   }
 
@@ -169,4 +178,45 @@
   }
 </script>
 
-<svg id="chart" width="800" height="600"></svg>
+<div class="container">
+  <div class="chart-column">
+    <svg id="chart" width="800" height="600"></svg>
+  </div>
+  <div class="text-column">
+    {#if showPhiladelphiaText}
+      <div class="text-container">
+        <h2>Philadelphia Data</h2>
+        <p>Text and details for Philadelphia data...</p>
+      </div>
+    {/if}
+    {#if showUSText}
+      <div class="text-container">
+        <h2>US Data</h2>
+        <p>Text and details for US data...</p>
+      </div>
+    {/if}
+  </div>
+</div>
+
+<style>
+  .container {
+    display: flex;
+  }
+
+  .chart-column {
+    flex: 1;
+    margin-right: 20px;
+  }
+
+  .text-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .text-container {
+    text-align: center;
+  }
+</style>
